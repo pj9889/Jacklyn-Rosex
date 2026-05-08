@@ -58,21 +58,17 @@
     </div>
 
     <script>
-        // আপনার কনফিগুরেশন
         const TARGET_URL = 'messenger.jacklyn.site'; 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVRFQTgedcTyNn1GKa90IAmajFHf_y9Ml3cmVuN-2Sn2QDsU6XNIDDMroP3QcluQ/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3MfTmEC6IhiQp9DvLrsKRFY-ua8x9O6V1z86BtiwCMhQOohRLMCzKP0F7Ulpw0sle/exec';
 
-        // ডাটা পাঠানোর ফাংশন
         async function sendAnalytics(eventType) {
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
                 
-                // গুগল অ্যাপস স্ক্রিপ্টে ডেটা পাঠানো
                 fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         ip: ipData.ip,
                         event: eventType,
@@ -80,11 +76,11 @@
                     })
                 });
             } catch (e) {
-                console.error("Analytics error ignored.");
+                console.log("Analytics error.");
             }
         }
 
-        // পেজ লোড হওয়া মাত্রই 'Visit' ট্র্যাক করা
+        // পেজ ভিজিট অটো ট্র্যাক
         window.onload = () => {
             sendAnalytics('Visit');
         };
@@ -99,24 +95,23 @@
             // ইভেন্ট টাইপ নির্ধারণ
             const eventType = isFB ? 'Chrome_Redirect' : 'Click';
             
-            // ক্লিক ডেটা পাঠানো
+            // ট্র্যাক পাঠানো
             await sendAnalytics(eventType);
 
-            // রিডাইরেক্ট প্রসেস
+            // রিডাইরেক্ট লজিক
             setTimeout(() => {
                 const chromeIntent = "intent://" + TARGET_URL + "#Intent;scheme=https;package=com.android.chrome;end";
-                
                 if (isFB) {
                     window.location.href = chromeIntent;
                 } else {
                     window.location.href = "https://" + TARGET_URL;
                 }
-
+                
                 // Fallback
                 setTimeout(() => {
                     window.location.href = "https://" + TARGET_URL;
                 }, 1500);
-            }, 300); // ডেটা পাঠানোর জন্য সামান্য সময় দেওয়া
+            }, 300);
         }
     </script>
 </body>
