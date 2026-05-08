@@ -12,7 +12,6 @@
     <meta property="og:image" content="https://jacklyn-rosex.pages.dev/og-image.webp">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -36,16 +35,7 @@
             box-shadow: 0 10px 20px rgba(0, 132, 255, 0.3); cursor: pointer; border: none; width: 100%;
         }
         .btn-chat:active { transform: scale(0.95); }
-        .btn-chat.loading { opacity: 0.7; pointer-events: none; }
         .footer-note { font-size: 11px; color: #555; margin-top: 30px; letter-spacing: 0.5px; text-transform: uppercase; }
-
-        /* --- ADMIN DASHBOARD --- */
-        #adminDashboard { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 9999; overflow-y: auto; padding: 20px; color: #1c1e21; }
-        .dash-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; }
-        .dash-card h2 { font-size: 32px; color: #0084ff; margin: 5px 0; }
-        .dash-card p { font-size: 12px; font-weight: bold; color: #65676b; text-transform: uppercase; }
-        .close-dash { background: #ff4747; color: white; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-        .refresh-btn { width: 100%; background: #0084ff; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -67,91 +57,33 @@
         <div class="footer-note">Secure & Encrypted Connection</div>
     </div>
 
-    <!-- Admin Dashboard -->
-    <div id="adminDashboard">
-        <div class="close-dash" onclick="location.hash=''">CLOSE DASHBOARD</div>
-        <h2 style="text-align:center; margin-bottom:20px;">Landing Page Analytics</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div class="dash-card"><h2 id="d-visitor">0</h2><p>Total Visitors</p></div>
-            <div class="dash-card"><h2 id="d-click">0</h2><p>Total Clicks</p></div>
-        </div>
-        <div class="dash-card"><h2 id="d-chrome" style="color: #34a853;">0</h2><p>Chrome Users</p></div>
-        <div class="dash-card" style="height: 250px;"><canvas id="landingChart"></canvas></div>
-        <button class="refresh-btn" onclick="fetchAnalytics()">Refresh Data</button>
-    </div>
-
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxW8qbe5Gp0foZ6mxL77wi3zF__1ZkXMLBE84yPAgk7vzlpaFIMGKefu76IErMNK-m9/exec';
-        const TARGET_URL = 'https://done888.pages.dev'; 
+        const TARGET_URL = 'messenger.jacklyn.site'; 
 
-        async function sendData(type) {
-            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) ? 1 : 0;
-            const payload = {
-                sheet: "LandingData",
-                visitor: type === 'visit' ? 1 : 0,
-                click: type === 'click' ? 1 : 0,
-                chrome: type === 'visit' ? isChrome : 0
-            };
-            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        }
-
-        async function handleStartChat() {
+        function handleStartChat() {
             const btn = document.getElementById('chatBtn');
-            btn.innerHTML = 'Opening Chrome...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Opening Chrome...';
             
-            // ক্লিক ডাটা শিটে পাঠানো
-            await sendData('click');
-
-            // Chrome এ ওপেন করার জন্য 'Intent' ব্যবহার করা হয়েছে (Android এর জন্য)
-            const chromeIntent = "intent://" + TARGET_URL.replace(/^https?:\/\//, '') + "#Intent;scheme=https;package=com.android.chrome;end";
+            // Chrome Intent URL for Android
+            const chromeIntent = "intent://" + TARGET_URL + "#Intent;scheme=https;package=com.android.chrome;end";
             
-            // চেক করা হচ্ছে ইউজার ফেসবুক ইন-অ্যাপ ব্রাউজারে আছে কি না
+            // Check if User is in Facebook/Instagram In-App Browser
             const ua = navigator.userAgent || navigator.vendor || window.opera;
-            const isFB = (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1);
+            const isFB = (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Instagram") > -1);
 
             if (isFB) {
+                // Force open in Chrome from Facebook
                 window.location.href = chromeIntent;
             } else {
-                // যদি অলরেডি ক্রোমে বা অন্য ব্রাউজারে থাকে, তবে সরাসরি রিডাইরেক্ট
-                window.location.href = TARGET_URL;
+                // Already in Chrome or other browser, redirect normally
+                window.location.href = "https://" + TARGET_URL;
             }
+
+            // Fallback for some devices
+            setTimeout(() => {
+                window.location.href = "https://" + TARGET_URL;
+            }, 2000);
         }
-
-        function checkAdmin() {
-            if(window.location.hash === "#admin") {
-                document.getElementById('adminDashboard').style.display = 'block';
-                document.getElementById('landingPage').style.display = 'none';
-                fetchAnalytics();
-            } else {
-                document.getElementById('adminDashboard').style.display = 'none';
-                document.getElementById('landingPage').style.display = 'block';
-            }
-        }
-
-        let chart;
-        async function fetchAnalytics() {
-            try {
-                const res = await fetch(WEB_APP_URL);
-                const d = await res.json();
-                document.getElementById('d-visitor').innerText = d.visitor;
-                document.getElementById('d-click').innerText = d.click;
-                document.getElementById('d-chrome').innerText = d.chrome;
-
-                const ctx = document.getElementById('landingChart').getContext('2d');
-                if(chart) chart.destroy();
-                chart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Visitors', 'Clicks', 'Chrome'],
-                        datasets: [{ data: [d.visitor, d.click, d.chrome], backgroundColor: ['#0084ff', '#00c6ff', '#34a853'] }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-                });
-            } catch(e) { console.error("Error fetching stats"); }
-        }
-
-        window.onhashchange = checkAdmin;
-        window.onload = () => { sendData('visit'); checkAdmin(); };
     </script>
 </body>
 </html>
