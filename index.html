@@ -11,15 +11,6 @@
     <meta property="og:title" content="Private Chat with Jacklyn Rose">
     <meta property="og:description" content="Active Now for Private Conversation & Video Calls. Connect securely.">
     <meta property="og:image" content="https://jacklyn-rosex.pages.dev/og-image.webp">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/webp">
-
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Private Chat with Jacklyn Rose">
-    <meta name="twitter:description" content="Active Now for Private Conversation & Video Calls.">
-    <meta name="twitter:image" content="https://jacklyn-rosex.pages.dev/og-image.webp">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -37,8 +28,23 @@
         .stat-box { text-align: center; }
         .stat-num { display: block; font-weight: bold; font-size: 18px; }
         .stat-label { font-size: 12px; color: #888; }
-        .btn-chat { display: block; background: linear-gradient(45deg, #0084ff, #00c6ff); color: white; text-decoration: none; padding: 16px; border-radius: 50px; font-weight: bold; font-size: 18px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 10px 20px rgba(0, 132, 255, 0.3); }
+        .btn-chat { 
+            display: block; 
+            background: linear-gradient(45deg, #0084ff, #00c6ff); 
+            color: white; 
+            text-decoration: none; 
+            padding: 16px; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            font-size: 18px; 
+            transition: 0.3s; 
+            box-shadow: 0 10px 20px rgba(0, 132, 255, 0.3);
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
         .btn-chat:active { transform: scale(0.95); }
+        .btn-chat.loading { opacity: 0.7; pointer-events: none; }
         .footer-note { font-size: 11px; color: #555; margin-top: 30px; letter-spacing: 0.5px; text-transform: uppercase; }
     </style>
 </head>
@@ -64,37 +70,60 @@
             </div>
         </div>
 
-        <a href="https://done888.pages.dev" class="btn-chat" onclick="sendData(1)">
+        <!-- এঙ্কর ট্যাগ সরিয়ে বাটন করা হয়েছে ভালো কন্ট্রোলের জন্য -->
+        <button class="btn-chat" id="chatBtn" onclick="handleStartChat()">
             <i class="fa-brands fa-facebook-messenger"></i> Start Private Chat
-        </a>
+        </button>
 
         <div class="footer-note">Secure & Encrypted Connection</div>
     </div>
 
-    <!-- Hidden Tracking Script -->
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz0yfOoAweiRoojKmEbDol5Ly83LhnBJlVmXSQj0U8bJ1H74hPKhTkgydZO2TEFLDVT/exec';
+        const TARGET_URL = 'https://done888.pages.dev'; // আপনার মেইন ওয়েবসাইট লিঙ্ক
 
-        async function sendData(clickCount = 0) {
+        // ডাটা পাঠানোর মূল ফাংশন
+        async function sendTrackingData(isClick = 0) {
             const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) ? 1 : 0;
             const payload = {
                 sheet: "LandingData",
-                visitor: 1,
-                click: clickCount,
+                visitor: isClick === 0 ? 1 : 0, // পেজ লোডে ১ ভিজিটর, ক্লিকে ০
+                click: isClick === 1 ? 1 : 0,   // ক্লিকে ১, লোডে ০
                 chrome: isChrome
             };
 
             try {
+                // fetch ব্যবহার করে ডাটা পাঠানো (POST Method)
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
+                    cache: 'no-cache',
                     body: JSON.stringify(payload)
                 });
-            } catch (e) { console.log(e); }
+            } catch (e) {
+                console.error("Tracking Error:", e);
+            }
         }
 
-        // পেজ লোড হওয়ার সাথে সাথে ১ জন ভিজিটর কাউন্ট করবে
-        window.onload = () => { sendData(0); };
+        // বাটন ক্লিক হ্যান্ডলার
+        async function handleStartChat() {
+            const btn = document.getElementById('chatBtn');
+            btn.classList.add('loading');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting...';
+
+            // ১. ক্লিক ডাটা পাঠানো নিশ্চিত করা
+            await sendTrackingData(1);
+
+            // ২. সামান্য ডিলে দিয়ে রিডাইরেক্ট করা (যাতে শিটে ডাটা সেভ হওয়ার সময় পায়)
+            setTimeout(() => {
+                window.location.href = TARGET_URL;
+            }, 500);
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে ভিজিটর ডাটা পাঠানো
+        window.onload = () => {
+            sendTrackingData(0);
+        };
     </script>
 
 </body>
