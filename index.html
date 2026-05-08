@@ -12,15 +12,15 @@
     <meta property="og:image" content="https://jacklyn-rosex.pages.dev/og-image.webp">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Chart.js for Dashboard -->
+    <!-- Chart.js for Dashboard Visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #0f0f0f; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #fff; }
+        body { background: #0f0f0f; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #fff; overflow-x: hidden; }
         
-        /* ল্যান্ডিং পেজ ডিজাইন */
-        .container { width: 90%; max-width: 400px; text-align: center; background: rgba(255, 255, 255, 0.05); padding: 40px 20px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        /* --- LANDING PAGE STYLE --- */
+        .container { width: 95%; max-width: 400px; text-align: center; background: rgba(255, 255, 255, 0.05); padding: 40px 20px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; z-index: 1; }
         .profile-container { position: relative; width: 140px; height: 140px; margin: 0 auto 20px; }
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #0084ff; padding: 3px; }
         .online-dot { position: absolute; bottom: 10px; right: 10px; width: 22px; height: 22px; background: #31a24c; border: 3px solid #1a1a1a; border-radius: 50%; }
@@ -50,7 +50,7 @@
         .btn-chat.loading { opacity: 0.7; pointer-events: none; }
         .footer-note { font-size: 11px; color: #555; margin-top: 30px; letter-spacing: 0.5px; text-transform: uppercase; }
 
-        /* --- DASHBOARD STYLES (নিচে আড়ালে থাকবে) --- */
+        /* --- SECRET ADMIN DASHBOARD STYLE --- */
         #adminDashboard { 
             display: none; 
             position: fixed; 
@@ -63,13 +63,15 @@
         .dash-card p { font-size: 12px; font-weight: bold; color: #65676b; text-transform: uppercase; }
         .close-dash { background: #ff4747; color: white; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
         .refresh-btn { width: 100%; background: #0084ff; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        canvas { max-width: 100%; }
     </style>
 </head>
 <body>
 
-    <!-- মেইন ল্যান্ডিং পেজ -->
+    <!-- মেইন ল্যান্ডিং পেজ (সবাই দেখবে) -->
     <div class="container" id="landingPage">
         <div class="profile-container">
+            <!-- আপনার ছবি যদি অন্য নামে থাকে তবে এখানে পাল্টে দিন -->
             <img src="og-image.webp" alt="Jacklyn Rose" class="profile-pic">
             <div class="online-dot"></div>
         </div>
@@ -95,7 +97,7 @@
         <div class="footer-note">Secure & Encrypted Connection</div>
     </div>
 
-    <!-- --- ADMIN DASHBOARD PANEL --- -->
+    <!-- গোপন এডমিন ড্যাশবোর্ড (শুধু #admin লিখলে আসবে) -->
     <div id="adminDashboard">
         <div class="close-dash" onclick="location.hash=''">CLOSE DASHBOARD</div>
         <h2 style="margin-bottom:15px; text-align:center;">Landing Page Analytics</h2>
@@ -110,18 +112,21 @@
             <p>Chrome Users</p>
         </div>
 
-        <div class="dash-card" style="margin-top:10px;">
-            <canvas id="landingChart" height="250"></canvas>
+        <div class="dash-card" style="height: 300px;">
+            <canvas id="landingChart"></canvas>
         </div>
 
-        <button class="refresh-btn" onclick="fetchAnalytics()"><i class="fa-solid fa-rotate"></i> Refresh Real-time Data</button>
+        <button class="refresh-btn" onclick="fetchAnalytics()">
+            <i class="fa-solid fa-rotate"></i> Refresh Real-time Data
+        </button>
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbSgiry7ujSJQmVwhtpmlO78JiVbzyixfufY_dDfQQBWakmHXEBn7Df2k4ZPWw4OUS/exec';
+        // আপনার দেওয়া নতুন স্ক্রিপ্ট লিঙ্ক
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxW8qbe5Gp0foZ6mxL77wi3zF__1ZkXMLBE84yPAgk7vzlpaFIMGKefu76IErMNK-m9/exec';
         const TARGET_URL = 'https://done888.pages.dev'; 
 
-        // --- TRACKING LOGIC ---
+        // ১. ট্র্যাকিং ডাটা পাঠানোর ফাংশন
         async function sendTrackingData(isClick = 0) {
             const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) ? 1 : 0;
             const payload = {
@@ -132,6 +137,7 @@
             };
 
             try {
+                // no-cors মুডে ডাটা পাঠানো হচ্ছে যাতে ব্রাউজারে এরর না দেখায়
                 fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -141,19 +147,21 @@
             } catch (e) { console.error("Tracking Error:", e); }
         }
 
+        // ২. বাটন ক্লিক হ্যান্ডলার
         async function handleStartChat() {
             const btn = document.getElementById('chatBtn');
             btn.classList.add('loading');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting...';
 
-            await sendTrackingData(1); // ক্লিক ডাটা পাঠানো
+            await sendTrackingData(1); // ক্লিক ডাটা পাঠানো হলো
 
+            // ডাটা সেভ হওয়ার জন্য সামান্য সময় দিয়ে রিডাইরেক্ট
             setTimeout(() => {
                 window.location.href = TARGET_URL;
-            }, 600);
+            }, 700);
         }
 
-        // --- DASHBOARD LOGIC ---
+        // ৩. ড্যাশবোর্ড এক্সেস চেকার
         function checkAdminAccess() {
             if(window.location.hash === "#admin") {
                 document.getElementById('adminDashboard').style.display = 'block';
@@ -165,15 +173,13 @@
             }
         }
 
-        window.onhashchange = checkAdminAccess;
-
+        // ৪. শিট থেকে ডাটা আনা এবং গ্রাফ বানানো
         let myChart;
         async function fetchAnalytics() {
             try {
                 const response = await fetch(WEB_APP_URL);
                 const data = await response.json();
                 
-                // আপনার Google Sheet এ 'LandingData' শিটের ডেটা এখানে ম্যাপ হবে
                 document.getElementById('d-visitor').innerText = data.visitor || 0;
                 document.getElementById('d-click').innerText = data.click || 0;
                 document.getElementById('d-chrome').innerText = data.chrome || 0;
@@ -190,14 +196,23 @@
                             backgroundColor: ['#0084ff', '#00c6ff', '#34a853']
                         }]
                     },
-                    options: { responsive: true, maintainAspectRatio: false }
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } }
+                    }
                 });
-            } catch(e) { console.log("Analytics Fetch Error"); }
+            } catch(e) { 
+                console.log("Analytics Fetch Error");
+                alert("Could not load data. Check if Google Script is deployed as 'Anyone'.");
+            }
         }
 
+        // ৫. পেজ লোড হলে যা হবে
+        window.onhashchange = checkAdminAccess;
         window.onload = () => {
-            sendTrackingData(0); // ভিজিটর কাউন্ট
-            checkAdminAccess();
+            sendTrackingData(0); // ভিজিটর কাউন্ট পাঠানো
+            checkAdminAccess();  // এডমিন কি না চেক করা
         };
     </script>
 
