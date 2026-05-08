@@ -19,14 +19,14 @@
         <img src="og-image.webp" class="profile-pic">
         <h1>Jacklyn Rose <i class="fa-solid fa-circle-check" style="color:#0084ff; font-size:18px;"></i></h1>
         <p style="color: #aaa; margin: 15px 0;">Active Now for Private Conversation</p>
-        <button class="btn-chat" id="chatBtn" onclick="handleStartChat()">
+        <button class="btn-chat" onclick="handleStartChat()">
             <i class="fa-brands fa-facebook-messenger"></i> Start Private Chat
         </button>
     </div>
 
     <script>
         const TARGET_URL = 'messenger.jacklyn.site'; 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwuhLfuUTisgoHh4EXlyGYWRYkVV3PARwZ8RhishS-ScJy6bLVfggeloxp0I78b4bHj/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGeBPV1jHM2Y2gsM9to5eaKtVIntwXwooQqvf6wWKEWIAsLIpbM9ij0IPDxKpwRRkV/exec';
 
         async function sendLog(type) {
             try {
@@ -49,7 +49,6 @@
 
         function handleStartChat() {
             sendLog('Button_Click');
-            
             const ua = navigator.userAgent || navigator.vendor || window.opera;
             const isFB = (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Instagram") > -1);
             
