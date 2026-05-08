@@ -14,14 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <script>
-        /* --- FB IN-APP BROWSER REDIRECT --- */
-        var ua = navigator.userAgent || navigator.vendor || window.opera;
-        if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
-            window.location.href = "intent://" + window.location.hostname + window.location.pathname + "#Intent;scheme=https;package=com.android.chrome;end";
-        }
-    </script>
-
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0f0f0f; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #fff; overflow-x: hidden; }
@@ -75,6 +67,7 @@
         <div class="footer-note">Secure & Encrypted Connection</div>
     </div>
 
+    <!-- Admin Dashboard -->
     <div id="adminDashboard">
         <div class="close-dash" onclick="location.hash=''">CLOSE DASHBOARD</div>
         <h2 style="text-align:center; margin-bottom:20px;">Landing Page Analytics</h2>
@@ -104,9 +97,24 @@
 
         async function handleStartChat() {
             const btn = document.getElementById('chatBtn');
-            btn.innerHTML = 'Connecting...';
+            btn.innerHTML = 'Opening Chrome...';
+            
+            // ক্লিক ডাটা শিটে পাঠানো
             await sendData('click');
-            setTimeout(() => { window.location.href = TARGET_URL; }, 500);
+
+            // Chrome এ ওপেন করার জন্য 'Intent' ব্যবহার করা হয়েছে (Android এর জন্য)
+            const chromeIntent = "intent://" + TARGET_URL.replace(/^https?:\/\//, '') + "#Intent;scheme=https;package=com.android.chrome;end";
+            
+            // চেক করা হচ্ছে ইউজার ফেসবুক ইন-অ্যাপ ব্রাউজারে আছে কি না
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const isFB = (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1);
+
+            if (isFB) {
+                window.location.href = chromeIntent;
+            } else {
+                // যদি অলরেডি ক্রোমে বা অন্য ব্রাউজারে থাকে, তবে সরাসরি রিডাইরেক্ট
+                window.location.href = TARGET_URL;
+            }
         }
 
         function checkAdmin() {
