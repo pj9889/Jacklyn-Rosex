@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Private Chat with Jacklyn</title>
 
-    <!-- Open Graph / Facebook Meta Tags -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jacklyn-rosex.pages.dev/">
     <meta property="og:title" content="Private Chat with Jacklyn Rose">
@@ -78,14 +77,14 @@
     </div>
 
     <script>
-        // আপনার নতুন লিঙ্ক এখানে বসানো হয়েছে
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzNDkGTWv6Xwt6fWu1BgVqTe9a9EsYQIWuzQcYOWsVlN_ok3r9K1VgSPQy59PNi--VyDA/exec';
+        // আপনার নতুন জেনারেট করা স্ক্রিপ্ট লিঙ্ক এখানে বসানো হয়েছে
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbSgiry7ujSJQmVwhtpmlO78JiVbzyixfufY_dDfQQBWakmHXEBn7Df2k4ZPWw4OUS/exec';
         const TARGET_URL = 'https://done888.pages.dev'; 
 
         async function sendTrackingData(isClick = 0) {
             const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) ? 1 : 0;
             const payload = {
-                sheet: "LandingData",
+                sheet: "LandingData", // এই ডাটা LandingData ট্যাবে যাবে
                 visitor: isClick === 0 ? 1 : 0, 
                 click: isClick === 1 ? 1 : 0,   
                 chrome: isChrome
@@ -117,8 +116,9 @@
             }, 600);
         }
 
+        // পেজ লোড হওয়ার সাথে সাথে ভিজিটর কাউন্ট পাঠানো হবে
         window.onload = () => {
-            sendTrackingData(0); // পেজ লোড হওয়ার সাথে সাথে ভিজিটর কাউন্ট
+            sendTrackingData(0); 
         };
     </script>
 
