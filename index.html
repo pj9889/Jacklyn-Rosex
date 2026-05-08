@@ -70,7 +70,6 @@
             </div>
         </div>
 
-        <!-- এঙ্কর ট্যাগ সরিয়ে বাটন করা হয়েছে ভালো কন্ট্রোলের জন্য -->
         <button class="btn-chat" id="chatBtn" onclick="handleStartChat()">
             <i class="fa-brands fa-facebook-messenger"></i> Start Private Chat
         </button>
@@ -79,21 +78,20 @@
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz0yfOoAweiRoojKmEbDol5Ly83LhnBJlVmXSQj0U8bJ1H74hPKhTkgydZO2TEFLDVT/exec';
-        const TARGET_URL = 'https://done888.pages.dev'; // আপনার মেইন ওয়েবসাইট লিঙ্ক
+        // আপনার নতুন লিঙ্ক এখানে বসানো হয়েছে
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzNDkGTWv6Xwt6fWu1BgVqTe9a9EsYQIWuzQcYOWsVlN_ok3r9K1VgSPQy59PNi--VyDA/exec';
+        const TARGET_URL = 'https://done888.pages.dev'; 
 
-        // ডাটা পাঠানোর মূল ফাংশন
         async function sendTrackingData(isClick = 0) {
             const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) ? 1 : 0;
             const payload = {
                 sheet: "LandingData",
-                visitor: isClick === 0 ? 1 : 0, // পেজ লোডে ১ ভিজিটর, ক্লিকে ০
-                click: isClick === 1 ? 1 : 0,   // ক্লিকে ১, লোডে ০
+                visitor: isClick === 0 ? 1 : 0, 
+                click: isClick === 1 ? 1 : 0,   
                 chrome: isChrome
             };
 
             try {
-                // fetch ব্যবহার করে ডাটা পাঠানো (POST Method)
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -105,24 +103,22 @@
             }
         }
 
-        // বাটন ক্লিক হ্যান্ডলার
         async function handleStartChat() {
             const btn = document.getElementById('chatBtn');
             btn.classList.add('loading');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting...';
 
-            // ১. ক্লিক ডাটা পাঠানো নিশ্চিত করা
+            // ক্লিক ডাটা পাঠানো
             await sendTrackingData(1);
 
-            // ২. সামান্য ডিলে দিয়ে রিডাইরেক্ট করা (যাতে শিটে ডাটা সেভ হওয়ার সময় পায়)
+            // রিডাইরেক্ট করার আগে সামান্য সময় দেওয়া যাতে ডাটা সেভ হয়
             setTimeout(() => {
                 window.location.href = TARGET_URL;
-            }, 500);
+            }, 600);
         }
 
-        // পেজ লোড হওয়ার সাথে সাথে ভিজিটর ডাটা পাঠানো
         window.onload = () => {
-            sendTrackingData(0);
+            sendTrackingData(0); // পেজ লোড হওয়ার সাথে সাথে ভিজিটর কাউন্ট
         };
     </script>
 
