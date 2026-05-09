@@ -16,7 +16,6 @@
             backdrop-filter: blur(15px); position: relative;
         }
 
-        /* প্রোফাইল পিকচার এবং অ্যাক্টিভ ডট কন্টেইনার */
         .profile-wrapper {
             position: relative;
             width: 125px;
@@ -32,14 +31,13 @@
             border: 3px solid #0084ff; 
         }
 
-        /* অ্যাক্টিভ ডট স্টাইল */
         .active-status {
             position: absolute;
             bottom: 8px;
             right: 8px;
             width: 20px;
             height: 20px;
-            background-color: #31a24c; /* Messenger Green */
+            background-color: #31a24c;
             border: 3px solid #1c1c1d;
             border-radius: 50%;
         }
@@ -82,7 +80,6 @@
 <body>
 
     <div class="container">
-        <!-- প্রোফাইল সেকশন আপডেট করা হয়েছে -->
         <div class="profile-wrapper">
             <img src="og-image.webp" class="profile-pic">
             <div class="active-status"></div>
@@ -91,8 +88,9 @@
         <h1>Jacklyn Rose <i class="fa-solid fa-circle-check" style="color:#0084ff; font-size:18px;"></i></h1>
         <p style="color: #aaa; margin: 15px 0;">Active Now for Private Conversation</p>
         
+        <!-- বাটন থেকে X সরিয়ে দেওয়া হয়েছে -->
         <button id="chatBtn" class="btn-chat" onclick="handleStartChat()">
-            <i class="fa-brands fa-facebook-messenger"></i> MESSAGE ME NOW X
+            <i class="fa-brands fa-facebook-messenger"></i> MESSAGE ME NOW
         </button>
 
         <div id="dynamic-text"></div>
