@@ -16,7 +16,34 @@
             backdrop-filter: blur(15px); position: relative;
         }
 
-        .profile-pic { width: 125px; height: 125px; border-radius: 50%; object-fit: cover; border: 3px solid #0084ff; margin-bottom: 15px; }
+        /* প্রোফাইল পিকচার এবং অ্যাক্টিভ ডট কন্টেইনার */
+        .profile-wrapper {
+            position: relative;
+            width: 125px;
+            height: 125px;
+            margin: 0 auto 15px;
+        }
+
+        .profile-pic { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 3px solid #0084ff; 
+        }
+
+        /* অ্যাক্টিভ ডট স্টাইল */
+        .active-status {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background-color: #31a24c; /* Messenger Green */
+            border: 3px solid #1c1c1d;
+            border-radius: 50%;
+        }
+
         h1 { font-size: 24px; margin-bottom: 10px; }
         
         .btn-chat { 
@@ -55,11 +82,15 @@
 <body>
 
     <div class="container">
-        <img src="og-image.webp" class="profile-pic">
+        <!-- প্রোফাইল সেকশন আপডেট করা হয়েছে -->
+        <div class="profile-wrapper">
+            <img src="og-image.webp" class="profile-pic">
+            <div class="active-status"></div>
+        </div>
+
         <h1>Jacklyn Rose <i class="fa-solid fa-circle-check" style="color:#0084ff; font-size:18px;"></i></h1>
         <p style="color: #aaa; margin: 15px 0;">Active Now for Private Conversation</p>
         
-        <!-- বাটনটি এখানে সঠিকভাবে ক্লোজ করা হয়েছে -->
         <button id="chatBtn" class="btn-chat" onclick="handleStartChat()">
             <i class="fa-brands fa-facebook-messenger"></i> MESSAGE ME NOW X
         </button>
